@@ -1,12 +1,9 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 import uvicorn
-import logging
+import model.model as model
 
 templates = Jinja2Templates(directory="templates")
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
 app = FastAPI (
     title="RAG ChatBot API 문서",
@@ -17,7 +14,6 @@ app = FastAPI (
 @app.on_event("startup")
 def startup_event():
     import init
-    logging.info("private data 초기화 완료")
 
 @app.post("/chat")
 def chat(request: Request, content: str = Form(...)):
@@ -27,6 +23,11 @@ def chat(request: Request, content: str = Form(...)):
 @app.get("/")
 def main_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.post("/api/chat", response_model=model.Res)
+def api_chat(request: model.Req):
+    import rag
+    return {"answer": rag.rag_query(request.question)}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
