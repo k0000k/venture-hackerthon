@@ -24,10 +24,8 @@ for filename in os.listdir(SOURCE_PATH):
     if filename.endswith('.pdf'):
         pdf_path = os.path.join(SOURCE_PATH, filename)
         reader = PdfReader(pdf_path)
-        text = ""
         for page in reader.pages:
-            text += page.extract_text()
-            doc = Document(page_content=text, metadata={"source": filename})
+            doc = Document(page_content=page.extract_text(), metadata={"source": filename})
             docs.append(doc)
 
 # Save to disk

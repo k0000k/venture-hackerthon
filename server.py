@@ -33,10 +33,20 @@ def chat(request: Request, content: str = Form(...)):
 def main_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-@app.post("/api/chat", response_model=model.Res)
+@app.post("/api/insurance-chat", response_model=model.Res)
 def api_chat(request: model.Req):
     import rag
-    return {"answer": rag.rag_query(request.question)}
+    return {"answer": rag.rag_query(request.question, "kb")}
+
+@app.post("/api/student-chat", response_model=model.Res)
+def api_chat(request: model.Req):
+    import rag
+    return {"answer": rag.rag_query(request.question, "student")}
+
+@app.post("/api/company-chat", response_model=model.Res)
+def api_chat(request: model.Req):
+    import rag
+    return {"answer": rag.rag_query(request.question, "company")}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=5000)
