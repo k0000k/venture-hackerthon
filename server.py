@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import model.model as model
 
@@ -9,6 +10,14 @@ app = FastAPI (
     title="RAG ChatBot API 문서",
     description="RAG ChatBot의 API 문서입니다.",
     version="1.0.0"
+)
+
+app.middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
