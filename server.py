@@ -12,7 +12,7 @@ app = FastAPI (
     version="1.0.0"
 )
 
-app.middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
